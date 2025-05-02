@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # fl_cheers_travels
 
 A new Flutter project.
@@ -14,3 +15,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# fl_cheers_travels
+>>>>>>> 3062929d4c964eb6e3b8c1887f2d4909af1c7a3d
