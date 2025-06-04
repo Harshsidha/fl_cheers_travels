@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
      child: Column(
        children: [
          HeaderSection(),
-         FlightBookingSection(),
+         SearchWidget(),
          UsbSection(),
          TopFlightOffers(),
          TravelGuidesSection(),

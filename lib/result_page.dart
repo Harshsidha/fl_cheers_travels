@@ -10,39 +10,42 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      color: Color(0xfff0f2f5),
-      child: Center(
-        child: SizedBox(
-          child: Column(
-            children: [
-              HeaderResult(),
-              SizedBox(height: 20,),
-              SizedBox(
-                width: 1200,
-                child: Column(
-                  children: [
-                    AirlineFareCard(),
-                    SizedBox(height: 15,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 300,
-                          height: 800,
-                          child: FlightFilterPanel(),
-                        ),
-                        SizedBox(width: 20,),
-                        ResultView(),
-                      ],
-                    )
-                  ],
+    return Scaffold(
+      backgroundColor: const Color(0xfff0f2f5),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                const HeaderResult(),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 1200,
+                  child: Column(
+                    children: [
+                      const AirlineFareCard(),
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          SizedBox(
+                            width: 300,
+                            height: 800,
+                            child: FlightFilterPanel(),
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: ResultView(),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              FooterInnerPage(),
-            ],
+                const FooterInnerPage(),
+              ],
+            ),
           ),
         ),
       ),

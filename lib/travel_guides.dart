@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class TravelGuidesSection extends StatelessWidget {
   const TravelGuidesSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    final travelCards = [
+      const TravelCard(
+        imagePath: 'assets/images/travelGuide.webp',
+        title: 'ATHENS',
+      ),
+      const TravelCard(
+        imagePath: 'assets/images/travelGuide1.webp',
+        title: 'PARIS',
+      ),
+      const TravelCard(
+        imagePath: 'assets/images/travelGuide2.webp',
+        title: 'MEXICO CITY',
+      ),
+      const TravelCard(
+        imagePath: 'assets/images/travelGuide3.webp',
+        title: 'BRISBANE',
+      ),
+    ];
+
     return Container(
-      color: Color(0xfffbfbfb),
+      color: const Color(0xfffbfbfb),
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Column(
@@ -46,34 +68,44 @@ class TravelGuidesSection extends StatelessWidget {
 
           const SizedBox(height: 40),
 
-          // Travel Guide Cards
-          Wrap(
-            spacing: 20,
-            runSpacing: 20,
-            alignment: WrapAlignment.center,
-            children: const [
-              TravelCard(
-                imagePath: 'assets/images/travelGuide.webp',
-                title: 'ATHENS',
+          // Travel Guide Cards - Carousel on mobile, Wrap on larger screens
+          if (isMobile)
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 400,
+                aspectRatio: 16/9,
+                viewportFraction: 0.8,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: true,
+                scrollDirection: Axis.horizontal,
               ),
-              TravelCard(
-                imagePath: 'assets/images/travelGuide1.webp',
-                title: 'PARIS',
-              ),
-              TravelCard(
-                imagePath: 'assets/images/travelGuide2.webp',
-                title: 'MEXICO CITY',
-              ),
-              TravelCard(
-                imagePath: 'assets/images/travelGuide3.webp',
-                title: 'BRISBANE',
-              ),
-            ],
-          ),
+              items: travelCards.map((card) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: card,
+                    );
+                  },
+                );
+              }).toList(),
+            )
+          else
+            Wrap(
+              spacing: 20,
+              runSpacing: 20,
+              alignment: WrapAlignment.center,
+              children: travelCards,
+            ),
 
           const SizedBox(height: 30),
 
-          // View More Button
           // View More Button
           TextButton(
             style: TextButton.styleFrom(
@@ -94,7 +126,6 @@ class TravelGuidesSection extends StatelessWidget {
               ),
             ),
           )
-
         ],
       ),
     );

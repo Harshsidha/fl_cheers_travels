@@ -9,84 +9,117 @@ class HelpSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        bool isMobile = constraints.maxWidth < 800;
+        final screenWidth = constraints.maxWidth;
+
+        // Define responsive breakpoints
+        bool isMobile = screenWidth < 600;
+        bool isTablet = screenWidth >= 600 && screenWidth < 1000;
+
         return Container(
-          padding: const EdgeInsets.only(top: 40, bottom: 20),
-          decoration: BoxDecoration(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 16 : 40,
+            vertical: isMobile ? 30 : 40,
+          ),
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/images/footerabove_bg.jpg"),
-              fit: BoxFit.cover, // or BoxFit.contain, BoxFit.fill, etc.
+              fit: BoxFit.cover,
             ),
           ),
           child: isMobile
-              ? Column(
-            children: [
-              _buildLeftSide(),
-              const SizedBox(height: 40),
-              _buildRightSide(),
-            ],
-          )
-              : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(flex: 2, child: _buildLeftSide()),
-              const SizedBox(width: 40),
-              Expanded(flex: 3, child: _buildRightSide()),
-            ],
-          ),
+              ? _buildMobileLayout()
+              : isTablet
+              ? _buildTabletLayout()
+              : _buildDesktopLayout(),
         );
       },
     );
   }
 
-  Widget _buildLeftSide() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildMobileLayout() {
+    return Column(
       children: [
-        const SizedBox(width: 90),
-        Container(
-          width: 450,
-          height: 280,
-          padding: EdgeInsets.only(top: 18),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: const [
-              DestinationCard(
-                  image: 'assets/images/thailand.jpg', label: '',),
-              SizedBox(width: 10),
-              DestinationCard(
-                  image: 'assets/images/australia.jpg', label: ''),
-              SizedBox(width: 10),
-              DestinationCard(
-                  image: 'assets/images/uae.jpg',
-                  label: ''),
-            ],
-          ),
-        ),
-        const SizedBox(width: 8),
+        _buildDestinationCards(mobile: true),
+        const SizedBox(height: 30),
+        _buildHelpContent(mobile: true),
       ],
     );
   }
 
-  Widget _buildRightSide() {
+  Widget _buildTabletLayout() {
+    return Column(
+      children: [
+        _buildDestinationCards(),
+        const SizedBox(height: 40),
+        _buildHelpContent(),
+      ],
+    );
+  }
+
+  Widget _buildDesktopLayout() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(flex: 2, child: _buildDestinationCards()),
+        const SizedBox(width: 40),
+        Expanded(flex: 3, child: _buildHelpContent()),
+      ],
+    );
+  }
+
+  Widget _buildDestinationCards({bool mobile = false}) {
+    return SizedBox(
+      height: mobile ? 230 : 280,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.only(top: mobile ? 10 : 18),
+        children: const [
+          SizedBox(width: 8),
+          DestinationCard(
+            image: 'assets/images/thailand.jpg',
+            label: '',
+          ),
+          SizedBox(width: 10),
+          DestinationCard(
+            image: 'assets/images/australia.jpg',
+            label: '',
+          ),
+          SizedBox(width: 10),
+          DestinationCard(
+            image: 'assets/images/uae.jpg',
+            label: '',
+          ),
+          SizedBox(width: 8),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHelpContent({bool mobile = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Didn't find what you are looking for –\nWe are here to help!",
           style: TextStyle(
-            fontSize: 26,
+            fontSize: mobile ? 22 : 26,
             color: Colors.white,
             fontWeight: FontWeight.w300,
-            height: 1.3
+            height: 1.3,
           ),
         ),
         const SizedBox(height: 15),
-        const Text(
-          "Cheers Travel Partners is an Australian based company. Cheers Travel stands as one of\n"
+        Text(
+          mobile
+              ? "Cheers Travel Partners is an Australian based company. Cheers Travel stands as one of the largest retail & online travel agencies. Accessing budget-friendly flights is easy: you can call our contact centre at "
+              : "Cheers Travel Partners is an Australian based company. Cheers Travel stands as one of\n"
               "the largest retail & online travel agencies. Accessing budget-friendly flights is easy:\n"
               "you can call our contact centre at ",
-          style: TextStyle(color: Colors.white, fontSize: 14, height: 1.8),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            height: 1.8,
+          ),
         ),
         RichText(
           text: TextSpan(
@@ -100,9 +133,15 @@ class HelpSection extends StatelessWidget {
                   fontSize: 14,
                 ),
               ),
-              const TextSpan(
-                text: ', or simply email us at ',
-                style: TextStyle(color: Colors.white, fontSize: 14, height: 2),
+              TextSpan(
+                text: mobile
+                    ? ', or simply email us at '
+                    : ', or simply email us at ',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    height: 2
+                ),
               ),
               TextSpan(
                 text: 'care@cheerstravel.com.au',
@@ -126,45 +165,59 @@ class HelpSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        Row(
+        Wrap(
+          spacing: 16,
+          runSpacing: 16,
           children: [
-            ElevatedButton.icon(
+            _buildActionButton(
+              icon: Icons.phone,
+              label: "Call 08 70992292",
               onPressed: () async {
                 final Uri telLaunchUri = Uri(scheme: 'tel', path: '0870992292');
                 if (await canLaunchUrl(telLaunchUri)) {
                   await launchUrl(telLaunchUri);
                 }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                ),
-              ),
-              icon: const Icon(Icons.phone, size: 25,),
-              label: const Text("Call 08 70992292", style: TextStyle(fontSize: 19,),),
+              mobile: mobile,
             ),
-            const SizedBox(width: 16),
-            ElevatedButton.icon(
+            _buildActionButton(
+              icon: Icons.email,
+              label: "Make an Enquiry",
               onPressed: () {
-                // Add enquiry functionality or route here
+                // Add enquiry functionality
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                ),
-              ),
-              icon: const Icon(Icons.email, size: 25,),
-              label: const Text("Make an Enquiry", style: TextStyle(fontSize: 19,)),
+              mobile: mobile,
             ),
           ],
-        )
+        ),
       ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+    bool mobile = false,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        padding: EdgeInsets.symmetric(
+          vertical: mobile ? 12 : 15,
+          horizontal: mobile ? 12 : 20,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4)),
+        ),
+      ),
+      icon: Icon(icon, size: mobile ? 20 : 25),
+      label: Text(
+        label,
+        style: TextStyle(fontSize: mobile ? 16 : 19),
+      ),
     );
   }
 }
@@ -183,7 +236,7 @@ class DestinationCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           child: Image.asset(
             image,
-            height: 214,
+            height: 190,
             width: 140,
             fit: BoxFit.cover,
           ),

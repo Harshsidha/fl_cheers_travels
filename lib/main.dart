@@ -1,7 +1,7 @@
 import 'package:cheers_travel_website/result_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'destination/top_destination.dart';
 import 'home_page.dart';
 
 void main() {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Cheers Travel'),
       theme: ThemeData(
-        textTheme: GoogleFonts.montserratTextTheme(
+        textTheme: GoogleFonts.notoSansTextTheme(
           Theme.of(context).textTheme,
         ),
       ),
@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               HomePage(),
+              /*DiscountedFlightsSection(),*/
               /*ResultPage(),*/
             ],
           ),
